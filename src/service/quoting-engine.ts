@@ -111,7 +111,7 @@ export class QuotingEngine {
         if (positionDivergence < params.size) {
             positionDivergence = params.size;
         }
-        this._log.warn('Computed position divergence as:', positionDivergence);
+        // this._log.warn('Computed position divergence as:', positionDivergence);
 
         if (totalBasePosition < targetBasePosition - positionDivergence) {//params.positionDivergence) {
             unrounded.askPx = null;
