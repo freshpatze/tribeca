@@ -115,7 +115,7 @@ const pair = ParseCurrencyPair(config.GetString("TradedPair"));
 
 const defaultActive : Models.SerializedQuotesActive = new Models.SerializedQuotesActive(false, new Date(1));
 const defaultQuotingParameters : Models.QuotingParameters = new Models.QuotingParameters(.3, .05, Models.QuotingMode.Top, 
-    Models.FairValueModel.BBO, 3, .8, false, Models.AutoPositionMode.Off, false, 2.5, 300, .095, 2*.095, .095, 3, .1);
+    Models.FairValueModel.BBO, 3, .8, false, Models.AutoPositionMode.Off, false, 2.5, 300, .0995, 2*.095, .095, 3, .1);
 
 const backTestSimulationSetup = (inputData : Array<Models.Market | Models.MarketTrade>, parameters : Backtest.BacktestParameters) : SimulationClasses => {
     const timeProvider : Utils.ITimeProvider = new Backtest.BacktestTimeProvider(moment(_.first(inputData).time), moment(_.last(inputData).time));
@@ -336,9 +336,9 @@ const runTradingSystem = async (classes: SimulationClasses) : Promise<void> => {
     const ewma = new Statistics.ObservableEWMACalculator(timeProvider, fvEngine, initParams.quotingEwma);
 
     const rfvValues = _.map(initRfv, (r: Models.RegularFairValue) => r.value);
-    const shortEwma = new Statistics.EwmaStatisticCalculator(initParams.shortEwma);
+    const shortEwma = new Statistics.EwmaStatisticCalculator(13.3);/* this should be the long */ // initParams.shortEwma);  // -> 1.9
     shortEwma.initialize(rfvValues);
-    const longEwma = new Statistics.EwmaStatisticCalculator(initParams.longEwma);
+    const longEwma = new Statistics.EwmaStatisticCalculator(25);// initParams.longEwma);    // 0.995
     longEwma.initialize(rfvValues);
     
     const registry = new QuotingStyleRegistry.QuotingStyleRegistry([
