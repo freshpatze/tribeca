@@ -104,14 +104,23 @@ export class QuotingEngine {
         const latestPosition = this._positionBroker.latestReport;
         const totalBasePosition = latestPosition.baseAmount + latestPosition.baseHeldAmount;
         
-        if (totalBasePosition < targetBasePosition - params.positionDivergence) {
+        // loosen position divergence on neutral target base position
+        const neutralPositionValue = latestPosition.value / 2;
+        var distanceFactor = Math.abs(targetBasePosition - neutralPositionValue) / neutralPositionValue;
+        var positionDivergence = (neutralPositionValue / 2) * (1 - distanceFactor); 
+        if (positionDivergence < params.size) {
+            positionDivergence = params.size;
+        }
+        this._log.warn('Computed position divergence as:', positionDivergence);
+
+        if (totalBasePosition < targetBasePosition - positionDivergence) {//params.positionDivergence) {
             unrounded.askPx = null;
             unrounded.askSz = null;
             if (params.aggressivePositionRebalancing)
                 unrounded.bidSz = Math.min(params.aprMultiplier*params.size, targetBasePosition - totalBasePosition);
         }
         
-        if (totalBasePosition > targetBasePosition + params.positionDivergence) {
+        if (totalBasePosition > targetBasePosition + positionDivergence) { //params.positionDivergence) {
             unrounded.bidPx = null;
             unrounded.bidSz = null;
             if (params.aggressivePositionRebalancing)
