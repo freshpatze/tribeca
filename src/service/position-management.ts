@@ -60,8 +60,8 @@ export class PositionManager {
         const minTick = this._details.minTickIncrement;    
         const factor = 1/minTick;   // 100 for coinbase -> 0.01 per tick
 
-        let newTargetPosition = ((newLong * factor/ newShort) - factor) * 12;
-        this._log.info('new target position:', newTargetPosition);
+        let newTargetPosition = ((newLong * factor/ newShort) - factor) * 5;
+        this._log.info('new target position:', newTargetPosition);  // 3532 3545
 
         if (newTargetPosition > 1) newTargetPosition = 1;
         if (newTargetPosition < -1) newTargetPosition = -1;

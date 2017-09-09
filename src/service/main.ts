@@ -336,9 +336,9 @@ const runTradingSystem = async (classes: SimulationClasses) : Promise<void> => {
     const ewma = new Statistics.ObservableEWMACalculator(timeProvider, fvEngine, 0.133);// initParams.quotingEwma);
 
     const rfvValues = _.map(initRfv, (r: Models.RegularFairValue) => r.value);
-    const shortEwma = new Statistics.EwmaStatisticCalculator(0.2);/* this should be the long */ // initParams.shortEwma);  // -> 1.9
+    const shortEwma = new Statistics.EwmaStatisticCalculator(0.182);/* 10 short */ // initParams.shortEwma);  // -> 1.9
     shortEwma.initialize(rfvValues);
-    const longEwma = new Statistics.EwmaStatisticCalculator(0.133);// initParams.longEwma);    // 0.995
+    const longEwma = new Statistics.EwmaStatisticCalculator(0.074);// initParams.longEwma);    // 0.995
     longEwma.initialize(rfvValues);
     
     const registry = new QuotingStyleRegistry.QuotingStyleRegistry([
