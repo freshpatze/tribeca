@@ -34,7 +34,7 @@ export function computeEwma(newValue: number, previous: number, alpha: number): 
     if (previous !== null) {
         return alpha * newValue + (1 - alpha) * previous;
     }
-
+    this._log.info("New EMWA value (for position):", newValue);
     return newValue;
 }
 
