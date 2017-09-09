@@ -333,7 +333,7 @@ const runTradingSystem = async (classes: SimulationClasses) : Promise<void> => {
     const quoter = new Quoter.Quoter(orderBroker, broker);
     const filtration = new MarketFiltration.MarketFiltration(broker, new Utils.ImmediateActionScheduler(timeProvider), quoter, marketDataBroker);
     const fvEngine = new FairValue.FairValueEngine(broker, timeProvider, filtration, paramsRepo, fvPublisher, fairValuePersister);
-    const ewma = new Statistics.ObservableEWMACalculator(timeProvider, fvEngine, initParams.quotingEwma);
+    const ewma = new Statistics.ObservableEWMACalculator(timeProvider, fvEngine, 13.3);// initParams.quotingEwma);
 
     const rfvValues = _.map(initRfv, (r: Models.RegularFairValue) => r.value);
     const shortEwma = new Statistics.EwmaStatisticCalculator(13.3);/* this should be the long */ // initParams.shortEwma);  // -> 1.9
