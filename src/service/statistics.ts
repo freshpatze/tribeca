@@ -20,6 +20,8 @@ export class EwmaStatisticCalculator implements IComputeStatistics {
     public latest: number = null;
 
     initialize(seedData: number[]) {
+
+        this._log.info('initialize EWMA calculation');
         for (var i = 0; i < seedData.length; i++)
             this.addNewValue(seedData[i]);
     }
