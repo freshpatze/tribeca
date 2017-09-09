@@ -16,7 +16,7 @@ export interface IComputeStatistics {
 
 export class EwmaStatisticCalculator implements IComputeStatistics {
     constructor(private _alpha: number) { }
-
+    private _log = log("ewma");
     public latest: number = null;
 
     initialize(seedData: number[]) {
@@ -26,6 +26,7 @@ export class EwmaStatisticCalculator implements IComputeStatistics {
 
     addNewValue(value: number): number {
         this.latest = computeEwma(value, this.latest, this._alpha);
+        this._log.info("New EMWA value (for position)", this.latest);
         return this.latest;
     }
 }
@@ -34,7 +35,6 @@ export function computeEwma(newValue: number, previous: number, alpha: number): 
     if (previous !== null) {
         return alpha * newValue + (1 - alpha) * previous;
     }
-    this._log.info("New EMWA value (for position):", newValue);
     return newValue;
 }
 
