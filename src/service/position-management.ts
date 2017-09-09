@@ -58,10 +58,9 @@ export class PositionManager {
         // idea: short < long -> buy -> increase tbp
 
         const minTick = this._details.minTickIncrement;    
-        const factor = 1/minTick;   // 100 ?
-        this._log.info('factor:', factor);
+        const factor = 1/minTick;   // 100 for coinbase -> 0.01 per tick
 
-        let newTargetPosition = ((newLong * factor/ newShort) - factor) * 5;
+        let newTargetPosition = ((newLong * factor/ newShort) - factor) * 12;
         this._log.info('new target position:', newTargetPosition);
 
         if (newTargetPosition > 1) newTargetPosition = 1;
@@ -71,7 +70,6 @@ export class PositionManager {
 
         if (Math.abs(newTargetPosition - this._latest) > minTick) {
             this._latest = newTargetPosition;
-            this._log.info('newTargetPosition triggered');
             this.NewTargetPosition.trigger();
         }
 
