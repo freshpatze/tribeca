@@ -55,15 +55,23 @@ export class PositionManager {
         const newShort = this._shortEwma.addNewValue(fv.price);
         const newLong = this._longEwma.addNewValue(fv.price);
 
+        // idea: short < long -> buy -> increase tbp
+
         const minTick = this._details.minTickIncrement;    
-        const factor = 1/minTick;
-        let newTargetPosition = ((newShort * factor/ newLong) - factor) * 5;
+        const factor = 1/minTick;   // 100 ?
+        this._log.info('factor:', factor);
+
+        let newTargetPosition = ((newLong * factor/ newShort) - factor) * 5;
+        this._log.info('new target position:', newTargetPosition);
 
         if (newTargetPosition > 1) newTargetPosition = 1;
         if (newTargetPosition < -1) newTargetPosition = -1;
 
+        this._log.info('newTargetPosition (limited):', newTargetPosition);
+
         if (Math.abs(newTargetPosition - this._latest) > minTick) {
             this._latest = newTargetPosition;
+            this._log.info('newTargetPosition triggered');
             this.NewTargetPosition.trigger();
         }
 
@@ -107,6 +115,9 @@ export class TargetBasePositionManager {
         let targetBasePosition: number = params.targetBasePosition;
         if (params.autoPositionMode === Models.AutoPositionMode.EwmaBasic) {
             targetBasePosition = ((1 + this._positionManager.latestTargetPosition) / 2.0) * latestPosition.value;
+            this._log.info('latestTargetPosition:', this._positionManager.latestTargetPosition);
+            this._log.info('latestPosition.value:', latestPosition.value);
+            this._log.info('targetBasePosition:', targetBasePosition);
         }
 
         if (this._latest === null || Math.abs(this._latest.data - targetBasePosition) > 0.05) {
